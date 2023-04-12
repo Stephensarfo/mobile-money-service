@@ -1,0 +1,94 @@
+#include <iostream>
+
+// Default PIN and balance
+const std::string DEFAULT_PIN = "0000";
+const int DEFAULT_BALANCE = 1000;
+
+// Function to authenticate the user
+bool authenticate(const std::string& pin) {
+    static int wrongAttempts = 0;
+    if (pin == DEFAULT_PIN) {
+        wrongAttempts = 0;
+        return true;
+    } else {
+        ++wrongAttempts;
+        if (wrongAttempts >= 3) {
+            std::cout << "Three wrong attempts. Exiting...\n";
+            return false;
+        } else {
+            std::cout << "Wrong PIN. Please try again.\n";
+            return false;
+        }
+    }
+}
+
+// Function to reset/change PIN
+void resetPin(std::string& pin) {
+    std::cout << "Enter new PIN: ";
+    std::cin >> pin;
+    std::cout << "PIN changed successfully.\n";
+}
+
+// Function to check balance
+void checkBalance(int balance) {
+    std::cout << "Your balance: $" << balance << "\n";
+}
+
+// Function to send money
+void sendMoney(int& balance) {
+    int amount;
+    std::cout << "Enter amount to send: $";
+    std::cin >> amount;
+    if (amount > balance) {
+        std::cout << "Insufficient balance.\n";
+    } else {
+        balance -= amount;
+        std::cout << "Money sent successfully.\n";
+    }
+}
+
+int main() {
+    std::string pin = DEFAULT_PIN;
+    int balance = DEFAULT_BALANCE;
+    int choice;
+
+    do {
+        std::cout << "1. Authenticate\n"
+                  << "2. Reset PIN\n"
+                  << "3. Check Balance\n"
+                  << "4. Send Money\n"
+                  << "5. Exit\n"
+                  << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                {
+                    std::string enteredPin;
+                    std::cout << "Enter PIN: ";
+                    std::cin >> enteredPin;
+                    if (authenticate(enteredPin)) {
+                        std::cout << "Authentication successful.\n";
+                    }
+                }
+                break;
+            case 2:
+                resetPin(pin);
+                break;
+            case 3:
+                checkBalance(balance);
+                break;
+            case 4:
+                sendMoney(balance);
+                break;
+            case 5:
+                std::cout << "Exiting...\n";
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
